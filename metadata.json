@@ -1,0 +1,8 @@
+{
+  "name": "INS Compiler",
+  "description": "Information and Network Security (INS) practical programs one-click code copying platform.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
