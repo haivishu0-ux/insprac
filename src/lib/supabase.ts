@@ -52,20 +52,29 @@ export async function fetchPracticals(): Promise<{
       };
     }
 
-    // Map database fields safely
-    const formattedData: Practical[] = data.map((item) => ({
-      id: String(item.id ?? item.practical_code ?? ''),
-      practical_number: Number(item.practical_number ?? 0),
-      practical_code: String(item.practical_code ?? `P${String(item.practical_number).padStart(2, '0')}`),
-      title: String(item.title ?? ''),
-      description: String(item.description ?? ''),
-      language: String(item.language ?? 'python'),
-      code_content: String(item.code_content ?? ''),
-      copyable: item.copyable !== false,
-      is_procedural: Boolean(item.is_procedural),
-      created_at: item.created_at,
-      updated_at: item.updated_at
-    }));
+    // Map database fields safely and retain parts structure
+    const formattedData: Practical[] = data.map((item) => {
+      const fallbackItem = PRACTICALS_DATA.find(
+        (p) => p.practical_number === item.practical_number || p.practical_code === item.practical_code
+      );
+
+      return {
+        id: String(item.id ?? item.practical_code ?? ''),
+        practical_number: Number(item.practical_number ?? 0),
+        practical_code: String(item.practical_code ?? `P${String(item.practical_number).padStart(2, '0')}`),
+        title: String(item.title ?? fallbackItem?.title ?? ''),
+        description: String(item.description ?? fallbackItem?.description ?? ''),
+        language: String(item.language ?? fallbackItem?.language ?? 'python'),
+        install_command: item.install_command ?? fallbackItem?.install_command,
+        install_label: item.install_label ?? fallbackItem?.install_label,
+        parts: item.parts && Array.isArray(item.parts) && item.parts.length > 0 ? item.parts : (fallbackItem?.parts ?? []),
+        code_content: String(item.code_content ?? fallbackItem?.code_content ?? ''),
+        copyable: item.copyable !== false,
+        is_procedural: Boolean(item.is_procedural ?? fallbackItem?.is_procedural),
+        created_at: item.created_at,
+        updated_at: item.updated_at
+      };
+    });
 
     return {
       data: formattedData,
@@ -103,7 +112,6 @@ export async function copyToClipboard(text: string): Promise<boolean> {
   try {
     const textArea = document.createElement('textarea');
     textArea.value = text;
-    // Avoid scrolling to bottom
     textArea.style.top = '0';
     textArea.style.left = '0';
     textArea.style.position = 'fixed';

@@ -11,7 +11,7 @@ import { Check } from 'lucide-react';
 
 export default function App() {
   const [practicals, setPracticals] = useState<Practical[]>(PRACTICALS_DATA);
-  const [copiedCode, setCopiedCode] = useState<string | null>(null);
+  const [copiedIdentifier, setCopiedIdentifier] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const toastTimeoutRef = useRef<number | null>(null);
 
@@ -32,18 +32,18 @@ export default function App() {
     };
   }, []);
 
-  const handleCopyPractical = async (practical: Practical) => {
-    const success = await copyToClipboard(practical.code_content);
+  const handleCopyText = async (text: string, identifier: string, label: string) => {
+    const success = await copyToClipboard(text);
     if (success) {
-      setCopiedCode(practical.practical_code);
-      setToastMessage(`✓ ${practical.practical_code} Code Copied!`);
+      setCopiedIdentifier(identifier);
+      setToastMessage(label);
 
       if (toastTimeoutRef.current) {
         window.clearTimeout(toastTimeoutRef.current);
       }
 
       toastTimeoutRef.current = window.setTimeout(() => {
-        setCopiedCode(null);
+        setCopiedIdentifier(null);
         setToastMessage(null);
       }, 2500);
     }
@@ -51,7 +51,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#071827] text-white flex flex-col justify-between selection:bg-[#39BDF2]/30 selection:text-white">
-      {/* Main Content Area */}
+      {/* Main Container */}
       <main className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Header Block */}
         <header className="mb-8 sm:mb-10 text-left">
@@ -61,16 +61,19 @@ export default function App() {
           <h2 className="mt-1 sm:mt-1.5 text-xl sm:text-2xl font-semibold text-[#A9C9E8]">
             INS Practical Programs
           </h2>
+          <p className="mt-1.5 text-xs sm:text-sm text-[#A9C9E8]/70">
+            One-click practical code and configuration copying for Information and Network Security practicals.
+          </p>
         </header>
 
         {/* 2-Column Practical Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 items-start">
           {practicals.map((practical) => (
             <PracticalCard
               key={practical.id || practical.practical_code}
               practical={practical}
-              isCopied={copiedCode === practical.practical_code}
-              onCopy={handleCopyPractical}
+              copiedIdentifier={copiedIdentifier}
+              onCopyText={handleCopyText}
             />
           ))}
         </div>
@@ -86,7 +89,7 @@ export default function App() {
         <aside
           role="status"
           aria-live="polite"
-          className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-2.5 bg-[#172F49] text-white border border-[#39BDF2]/60 rounded-xl shadow-2xl animate-in fade-in slide-in-from-bottom-3 duration-200"
+          className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-2.5 bg-[#172F49] text-white border border-[#39BDF2]/70 rounded-xl shadow-2xl animate-in fade-in slide-in-from-bottom-3 duration-200"
         >
           <div className="w-5 h-5 rounded-full bg-[#39BDF2]/20 flex items-center justify-center text-[#39BDF2]">
             <Check className="w-3.5 h-3.5 stroke-[2.5]" />

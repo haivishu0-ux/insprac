@@ -10,6 +10,9 @@ CREATE TABLE IF NOT EXISTS practicals (
     title TEXT NOT NULL,
     description TEXT,
     language TEXT NOT NULL DEFAULT 'python',
+    install_command TEXT,
+    install_label TEXT,
+    parts JSONB DEFAULT '[]'::jsonb,
     code_content TEXT NOT NULL,
     copyable BOOLEAN NOT NULL DEFAULT true,
     is_procedural BOOLEAN NOT NULL DEFAULT false,
@@ -20,7 +23,7 @@ CREATE TABLE IF NOT EXISTS practicals (
 -- 2. Enable Row Level Security (RLS)
 ALTER TABLE practicals ENABLE ROW LEVEL SECURITY;
 
--- 3. Policy: Public read-only access (no login required for students)
+-- 3. Policy: Public read-only access (no login required)
 DROP POLICY IF EXISTS "Allow public read access" ON practicals;
 CREATE POLICY "Allow public read access" 
 ON practicals 
