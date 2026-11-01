@@ -20,7 +20,14 @@ export default function App() {
     let isMounted = true;
     fetchPracticals().then((result) => {
       if (isMounted && result.data && result.data.length > 0) {
-        setPracticals(result.data);
+        // Filter out practicals not present in user requirements (keep only P01-P08 excluding P06)
+        const allowedCodes = new Set(['P01', 'P02', 'P03', 'P04', 'P05', 'P07', 'P08']);
+        const filtered = result.data.filter((p) => allowedCodes.has(p.practical_code));
+        if (filtered.length > 0) {
+          setPracticals(filtered);
+        } else {
+          setPracticals(PRACTICALS_DATA);
+        }
       }
     });
 
@@ -62,7 +69,7 @@ export default function App() {
             INS Practical Programs
           </h2>
           <p className="mt-1.5 text-xs sm:text-sm text-[#A9C9E8]/70">
-            One-click practical code and configuration copying for Information and Network Security practicals.
+            One-click practical code copying platform for Information and Network Security practicals.
           </p>
         </header>
 

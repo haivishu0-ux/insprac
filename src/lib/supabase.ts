@@ -70,7 +70,6 @@ export async function fetchPracticals(): Promise<{
         parts: item.parts && Array.isArray(item.parts) && item.parts.length > 0 ? item.parts : (fallbackItem?.parts ?? []),
         code_content: String(item.code_content ?? fallbackItem?.code_content ?? ''),
         copyable: item.copyable !== false,
-        is_procedural: Boolean(item.is_procedural ?? fallbackItem?.is_procedural),
         created_at: item.created_at,
         updated_at: item.updated_at
       };

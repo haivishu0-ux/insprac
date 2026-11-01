@@ -15,7 +15,6 @@ CREATE TABLE IF NOT EXISTS practicals (
     parts JSONB DEFAULT '[]'::jsonb,
     code_content TEXT NOT NULL,
     copyable BOOLEAN NOT NULL DEFAULT true,
-    is_procedural BOOLEAN NOT NULL DEFAULT false,
     created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
 );
@@ -23,7 +22,7 @@ CREATE TABLE IF NOT EXISTS practicals (
 -- 2. Enable Row Level Security (RLS)
 ALTER TABLE practicals ENABLE ROW LEVEL SECURITY;
 
--- 3. Policy: Public read-only access (no login required)
+-- 3. Policy: Public read-only access
 DROP POLICY IF EXISTS "Allow public read access" ON practicals;
 CREATE POLICY "Allow public read access" 
 ON practicals 
